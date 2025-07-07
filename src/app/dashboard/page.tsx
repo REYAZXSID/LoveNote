@@ -18,10 +18,9 @@ import {
 import { useNotes } from '@/hooks/use-notes';
 import { moodEmojis } from '@/lib/types';
 import { useMemo } from 'react';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { Bell, Heart, Calendar, Palette } from 'lucide-react';
+import { Heart, Calendar, Palette } from 'lucide-react';
 import { differenceInDays, parseISO } from 'date-fns';
+import { FcmTokenManager } from '@/components/fcm-token-manager';
 
 const chartConfig = {
   notes: {
@@ -55,7 +54,6 @@ const chartConfig = {
 
 export default function DashboardPage() {
   const { notes } = useNotes();
-  const { toast } = useToast();
 
   const { totalNotes, daysSinceFirstNote, mostFrequentMood, chartData } = useMemo(() => {
     const totalNotes = notes.length;
@@ -87,14 +85,6 @@ export default function DashboardPage() {
 
     return { totalNotes, daysSinceFirstNote, mostFrequentMood, chartData };
   }, [notes]);
-
-  const triggerTestNotification = () => {
-    toast({
-      title: 'A new memory awaits!',
-      description: 'Your partner just shared a beautiful moment from your last vacation.',
-      image: 'https://placehold.co/200x200.png',
-    });
-  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -172,20 +162,8 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
       
-      <Card>
-        <CardHeader>
-            <CardTitle>Notification Preview</CardTitle>
-            <CardDescription>
-              This is how a new note notification will appear inside the app. This is a preview and not connected to a real notification system yet.
-            </CardDescription>
-        </CardHeader>
-        <CardContent>
-            <Button onClick={triggerTestNotification}>
-                <Bell className="mr-2 h-4 w-4" />
-                Trigger Test Notification
-            </Button>
-        </CardContent>
-      </Card>
+      <FcmTokenManager />
+
     </div>
   );
 }
