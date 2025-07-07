@@ -22,6 +22,12 @@ export default function VowsPage() {
   const { toast } = useToast();
 
   useEffect(() => {
+    if (vows.length > 0 && !selectedVow) {
+      setSelectedVow(vows[0]);
+    }
+  }, [vows, selectedVow]);
+
+  useEffect(() => {
     if (selectedVow) {
       setTitle(selectedVow.title);
       setContent(selectedVow.content);
@@ -36,9 +42,8 @@ export default function VowsPage() {
   };
 
   const handleNewVow = () => {
-    setSelectedVow(null);
-    setTitle('New Vow');
-    setContent('');
+    const newVow = addVow({ title: 'New Vow', content: '' });
+    setSelectedVow(newVow);
   };
 
   const handleSave = () => {
@@ -75,7 +80,7 @@ export default function VowsPage() {
   };
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 h-[calc(100vh-10rem)]">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 md:min-h-[75vh]">
       <Card className="md:col-span-1 flex flex-col">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Your Vows</CardTitle>
@@ -85,7 +90,7 @@ export default function VowsPage() {
         </CardHeader>
         <CardContent className="flex-grow p-0">
           <ScrollArea className="h-full">
-            <div className="p-6 pt-0 space-y-2">
+            <div className="p-2 md:p-6 pt-0 space-y-2">
             {vows.length > 0 ? (
               vows.map((vow) => (
                 <div
@@ -99,13 +104,13 @@ export default function VowsPage() {
                   onClick={() => handleSelectVow(vow)}
                 >
                   <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-semibold">{vow.title}</h3>
+                    <div className="flex-1 overflow-hidden">
+                      <h3 className="font-semibold truncate">{vow.title}</h3>
                       <p className="text-xs text-muted-foreground">
                         Updated {formatDistanceToNow(new Date(vow.lastUpdated), { addSuffix: true })}
                       </p>
                     </div>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={(e) => { e.stopPropagation(); handleDelete(vow.id); }}>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive flex-shrink-0" onClick={(e) => { e.stopPropagation(); handleDelete(vow.id); }}>
                         <Trash className="h-4 w-4" />
                     </Button>
                   </div>
@@ -139,10 +144,10 @@ export default function VowsPage() {
             placeholder="Write your heart out..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="flex-grow resize-none font-body text-base leading-relaxed"
+            className="flex-grow resize-none font-body text-base leading-relaxed min-h-[250px] md:min-h-0"
           />
            <div className="flex justify-end">
-            <Button onClick={handleSave}>
+            <Button onClick={handleSave} disabled={!selectedVow}>
               <Save className="mr-2 h-4 w-4" />
               Save Vow
             </Button>
