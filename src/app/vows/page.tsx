@@ -80,7 +80,7 @@ export default function VowsPage() {
   };
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 md:min-h-[75vh]">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 md:min-h-[75vh] animate-fade-in">
       <Card className="md:col-span-1 flex flex-col">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Your Vows</CardTitle>
@@ -96,10 +96,10 @@ export default function VowsPage() {
                 <div
                   key={vow.id}
                   className={cn(
-                    'p-3 rounded-lg cursor-pointer border-2 transition-colors',
+                    'p-3 rounded-lg cursor-pointer border-2 transition-all duration-200',
                     selectedVow?.id === vow.id
-                      ? 'border-primary bg-primary/10'
-                      : 'border-transparent hover:bg-muted/50'
+                      ? 'border-primary bg-primary/10 shadow-inner'
+                      : 'border-transparent hover:bg-muted/50 hover:border-border'
                   )}
                   onClick={() => handleSelectVow(vow)}
                 >

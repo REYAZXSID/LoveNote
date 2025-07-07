@@ -30,7 +30,7 @@ export default function CalendarPage() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in">
       <div className="md:col-span-1 flex flex-col items-center">
         <h1 className="text-3xl font-bold font-headline mb-4">Our Timeline</h1>
         <Calendar
@@ -56,9 +56,9 @@ export default function CalendarPage() {
       <div className="md:col-span-2">
         <div className="p-4 rounded-lg bg-card/50 min-h-[400px] flex items-center justify-center">
           {selectedNote ? (
-            <NoteCard note={selectedNote} className="bg-card shadow-none border-0 w-full" />
+            <NoteCard key={selectedNote.id} note={selectedNote} className="bg-card shadow-none border-0 w-full animate-scale-in" />
           ) : (
-            <div className="flex flex-col h-full items-center justify-center text-center p-12">
+            <div className="flex flex-col h-full items-center justify-center text-center p-12 animate-fade-in">
               <Heart className="w-16 h-16 text-muted-foreground/30 mb-4" />
               <h2 className="text-2xl font-semibold font-headline">No Note for This Day</h2>
               <p className="text-muted-foreground mt-2 mb-6 max-w-sm">

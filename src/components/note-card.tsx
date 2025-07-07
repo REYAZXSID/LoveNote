@@ -18,7 +18,7 @@ export function NoteCard({ note, className }: NoteCardProps) {
   const noteDate = parseISO(note.date + 'T12:00:00Z');
 
   return (
-    <Card className={cn("w-full overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20", className)}>
+    <Card className={cn("w-full overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20 hover:-translate-y-1", className)}>
       {note.image && (
         <div className="relative w-full aspect-video">
           <Image

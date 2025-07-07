@@ -181,8 +181,8 @@ export function NoteEditorDialog({ children, note }: { children: React.ReactNode
                           <FormLabel
                             htmlFor={mood}
                             className={cn(
-                              'flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground cursor-pointer w-full aspect-square transition-all',
-                              field.value === mood && 'border-primary ring-2 ring-primary'
+                              'flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground cursor-pointer w-full aspect-square transition-all duration-200 hover:scale-105',
+                              field.value === mood && 'border-primary ring-2 ring-primary scale-110'
                             )}
                           >
                             <span className="text-3xl">{emoji}</span>

@@ -87,14 +87,14 @@ export default function DashboardPage() {
   }, [notes]);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 animate-fade-in">
       <div className="text-center">
         <h1 className="text-4xl font-bold font-headline text-primary">Our Dashboard</h1>
         <p className="text-lg text-muted-foreground mt-2">A beautiful summary of our shared story.</p>
       </div>
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+        <Card className="transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Notes</CardTitle>
             <Heart className="h-4 w-4 text-muted-foreground" />
@@ -104,7 +104,7 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground">cherished memories captured</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Days of Love</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -114,7 +114,7 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground">since our first recorded note</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Our Vibe</CardTitle>
             <Palette className="h-4 w-4 text-muted-foreground" />
@@ -129,7 +129,7 @@ export default function DashboardPage() {
         </Card>
       </div>
       
-      <Card>
+      <Card className="transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg">
         <CardHeader>
           <CardTitle>Mood Distribution</CardTitle>
           <CardDescription>A look at the emotions behind our notes.</CardDescription>
