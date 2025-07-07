@@ -7,7 +7,6 @@ import { Calendar } from '@/components/ui/calendar';
 import { useNotes } from '@/hooks/use-notes';
 import { Heart, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-import { DayPicker } from 'react-day-picker';
 import { format } from 'date-fns';
 
 export default function CalendarPage() {
@@ -41,16 +40,17 @@ export default function CalendarPage() {
           className="rounded-xl border w-full bg-card shadow-sm"
           modifiers={modifiers}
           modifiersStyles={modifiersStyles}
-          components={{
-            Day: ({ ...props }) => {
-              const hasNote = props.date && getNoteByDate(props.date);
+          formatters={{
+            formatDay: (day) => {
+              const hasNote = getNoteByDate(day);
+              const dayOfMonth = day.getDate();
               return (
-                <div className="relative">
-                  <DayPicker.Day {...props} />
-                  {hasNote && <Heart className="absolute bottom-1 right-1 h-3 w-3 text-white" fill="white" />}
-                </div>
+                <>
+                  {dayOfMonth}
+                  {hasNote && <Heart className="absolute bottom-1 right-1 h-3 w-3" fill="currentColor" />}
+                </>
               );
-            },
+            }
           }}
         />
       </div>
