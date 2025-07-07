@@ -79,3 +79,14 @@
     font-feature-settings: "liga" 1, "calt" 1;
   }
 }
+
+@layer utilities {
+  @keyframes bell-ring {
+    0%, 100% { transform: rotate(0); }
+    10%, 30%, 50%, 70%, 90% { transform: rotate(15deg); }
+    20%, 40%, 60%, 80% { transform: rotate(-15deg); }
+  }
+  .animate-bell-ring {
+    animation: bell-ring 1.5s ease-in-out;
+  }
+}

@@ -1,7 +1,7 @@
 // src/components/providers/fcm-provider.tsx
 'use client';
 
-import { useToast } from "@/hooks/use-toast";
+import { useNotification } from "@/hooks/use-notification";
 import { app } from "@/lib/firebase";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import React, { createContext, useState, useEffect, useCallback } from 'react';
@@ -19,7 +19,7 @@ interface FcmContextType {
 export const FcmContext = createContext<FcmContextType | null>(null);
 
 export function FcmProvider({ children }: { children: React.ReactNode }) {
-    const { toast } = useToast();
+    const { showNotification } = useNotification();
     const [fcmToken, setFcmToken] = useState<string | null>(null);
     const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
     const [isMuted, setIsMuted] = useState<boolean>(true);
@@ -93,16 +93,18 @@ export function FcmProvider({ children }: { children: React.ReactNode }) {
         if (notificationPermission === 'granted' && !isMuted) {
             const unsubscribe = onMessage(messaging, (payload) => {
                 console.log('Foreground message received.', payload);
-                toast({
-                    title: payload.notification?.title,
-                    description: payload.notification?.body,
-                    image: payload.notification?.image,
-                });
+                if (payload.notification) {
+                     showNotification({
+                        title: payload.notification.title,
+                        body: payload.notification.body,
+                        image: payload.notification.image,
+                    });
+                }
             });
             
             return () => unsubscribe();
         }
-    }, [notificationPermission, isMuted, toast]);
+    }, [notificationPermission, isMuted, showNotification]);
     
     return (
         <FcmContext.Provider value={{ fcmToken, notificationPermission, isMuted, toggleMute, requestNotificationPermission }}>

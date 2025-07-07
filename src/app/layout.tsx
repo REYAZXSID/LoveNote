@@ -4,6 +4,7 @@ import { AppProviders } from '@/components/providers/app-provider';
 import { AppLayout } from '@/components/app-layout';
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
+import { NotificationModal } from '@/components/notification-modal';
 
 export const metadata: Metadata = {
   title: 'Eternal Echoes',
@@ -28,6 +29,7 @@ export default function RootLayout({
             {children}
           </AppLayout>
           <Toaster />
+          <NotificationModal />
         </AppProviders>
       </body>
     </html>
