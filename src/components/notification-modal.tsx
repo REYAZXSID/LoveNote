@@ -29,7 +29,7 @@ export function NotificationModal() {
 
   return (
     <AlertDialog open onOpenChange={handleClose}>
-      <AlertDialogContent className="max-w-md p-0 overflow-hidden rounded-xl shadow-2xl">
+      <AlertDialogContent className="max-w-lg p-0 overflow-hidden rounded-xl shadow-2xl">
         {notification.image && (
           <div className="relative w-full aspect-video">
             <Image
