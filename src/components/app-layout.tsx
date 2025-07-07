@@ -7,6 +7,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -68,23 +70,27 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   <span className="sr-only">Change Theme</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem onClick={() => setTheme('rose')}>
-                  <div className="mr-2 h-4 w-4 rounded-full bg-[#fbe2e3] border border-[#f5c6cb]"></div>
-                  <span>Romantic Rose</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('gold')}>
-                   <div className="mr-2 h-4 w-4 rounded-full bg-[#fef3c7] border border-[#fde68a]"></div>
-                  <span>Golden Sunshine</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('ocean')}>
-                   <div className="mr-2 h-4 w-4 rounded-full bg-[#cffafe] border border-[#a5f3fc]"></div>
-                  <span>Oceanic Serenity</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('night')}>
-                   <div className="mr-2 h-4 w-4 rounded-full bg-slate-800 border border-slate-700"></div>
-                  <span>Midnight Rose</span>
-                </DropdownMenuItem>
+              <DropdownMenuContent align="end" className="w-60 p-2">
+                <DropdownMenuLabel className="text-center font-semibold text-base pb-2">Choose a Theme</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <DropdownMenuItem onClick={() => setTheme('rose')} className="h-auto cursor-pointer flex-col gap-1 p-2 focus:bg-accent/50">
+                    <div className="w-full h-12 rounded-md bg-[#fbe2e3] border border-[#f5c6cb]"></div>
+                    <span className="text-sm pt-1">Romantic Rose</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme('gold')} className="h-auto cursor-pointer flex-col gap-1 p-2 focus:bg-accent/50">
+                    <div className="w-full h-12 rounded-md bg-[#fef3c7] border border-[#fde68a]"></div>
+                    <span className="text-sm pt-1">Golden Sunshine</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme('ocean')} className="h-auto cursor-pointer flex-col gap-1 p-2 focus:bg-accent/50">
+                    <div className="w-full h-12 rounded-md bg-[#cffafe] border border-[#a5f3fc]"></div>
+                    <span className="text-sm pt-1">Oceanic Serenity</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme('night')} className="h-auto cursor-pointer flex-col gap-1 p-2 focus:bg-accent/50">
+                    <div className="w-full h-12 rounded-md bg-slate-800 border border-slate-700"></div>
+                    <span className="text-sm pt-1">Midnight Rose</span>
+                  </DropdownMenuItem>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
