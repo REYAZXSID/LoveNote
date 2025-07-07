@@ -14,6 +14,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { FloatingHearts } from './floating-hearts';
 import { usePathname } from 'next/navigation';
@@ -38,14 +44,28 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <Heart className="h-7 w-7 text-primary" />
             <span className="font-headline text-xl font-semibold hidden sm:inline-block">Eternal Echoes</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-             {navItems.map(item => (
-                <Link key={item.href} href={item.href} className={`transition-colors hover:text-primary ${pathname === item.href ? 'text-primary font-semibold' : 'text-muted-foreground'}`}>
-                    {item.label}
-                </Link>
-             ))}
-          </nav>
-          <div className="ml-auto flex items-center gap-2 md:ml-4">
+
+          <TooltipProvider>
+            <nav className="hidden md:flex items-center gap-2">
+              {navItems.map(item => (
+                  <Tooltip key={item.href}>
+                    <TooltipTrigger asChild>
+                      <Button asChild variant={pathname === item.href ? 'secondary' : 'ghost'} size="icon">
+                          <Link href={item.href}>
+                              {item.icon}
+                              <span className="sr-only">{item.label}</span>
+                          </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{item.label}</p>
+                    </TooltipContent>
+                  </Tooltip>
+              ))}
+            </nav>
+          </TooltipProvider>
+
+          <div className="flex items-center gap-2 md:ml-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
