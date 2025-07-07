@@ -19,7 +19,7 @@ export function NotesProvider({ children }: { children: React.ReactNode }) {
   const [notes, setNotes] = useState<Note[]>([]);
 
   useEffect(() => {
-    const storedNotes = localStorage.getItem('eternal-echoes-notes');
+    const storedNotes = localStorage.getItem('lovenote-notes');
     if (storedNotes) {
       setNotes(JSON.parse(storedNotes));
     } else {
@@ -29,7 +29,7 @@ export function NotesProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (notes.length > 0) {
-      localStorage.setItem('eternal-echoes-notes', JSON.stringify(notes));
+      localStorage.setItem('lovenote-notes', JSON.stringify(notes));
     }
   }, [notes]);
 

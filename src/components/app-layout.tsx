@@ -36,8 +36,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-20 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Heart className="h-7 w-7 text-primary" />
-            <span className="font-headline text-xl font-semibold hidden sm:inline-block">Eternal Echoes</span>
+            <Heart className="h-7 w-7 text-primary animate-heart-pulse" />
+            <span className="font-headline text-xl font-semibold hidden sm:inline-block">LoveNote</span>
           </Link>
 
           <div className="flex items-center gap-1">

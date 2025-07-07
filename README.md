@@ -1,4 +1,4 @@
-# Eternal Echoes
+# LoveNote
 
 A Next.js application to capture and cherish your love notes forever. Built with Firebase Studio.
 

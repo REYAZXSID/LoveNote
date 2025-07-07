@@ -6,7 +6,7 @@ import { app } from "@/lib/firebase";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 
-const FCM_MUTED_KEY = 'eternal-echoes-fcm-muted';
+const FCM_MUTED_KEY = 'lovenote-fcm-muted';
 
 interface FcmContextType {
     fcmToken: string | null;

@@ -13,7 +13,7 @@ interface VowsContextType {
 
 export const VowsContext = createContext<VowsContextType | null>(null);
 
-const VOWS_STORAGE_KEY = 'eternal-echoes-vows';
+const VOWS_STORAGE_KEY = 'lovenote-vows';
 
 export function VowsProvider({ children }: { children: React.ReactNode }) {
   const [vows, setVows] = useState<Vow[]>([]);

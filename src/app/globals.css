@@ -150,4 +150,16 @@
   .animate-bell-ring {
     animation: bell-ring 1s ease-in-out;
   }
+
+  @keyframes heart-pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+  .animate-heart-pulse {
+    animation: heart-pulse 1.5s ease-in-out infinite;
+  }
 }

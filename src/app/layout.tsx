@@ -18,7 +18,7 @@ const fontLora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: 'Eternal Echoes',
+  title: 'LoveNote',
   description: 'A sanctuary for your love notes.',
 };
 
