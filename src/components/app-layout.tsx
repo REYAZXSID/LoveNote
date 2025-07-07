@@ -11,7 +11,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { Calendar, Heart, Images } from 'lucide-react';
+import { Calendar, Heart, Images, LayoutDashboard, ScrollText } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FloatingHearts } from './floating-hearts';
@@ -38,6 +38,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={pathname === '/dashboard'}>
+                <Link href="/dashboard">
+                  <LayoutDashboard />
+                  <span>Dashboard</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={pathname === '/gallery'}>
                 <Link href="/gallery">
@@ -51,6 +59,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 <Link href="/calendar">
                   <Calendar />
                   <span>Calendar</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={pathname === '/vows'}>
+                <Link href="/vows">
+                  <ScrollText />
+                  <span>Our Vows</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

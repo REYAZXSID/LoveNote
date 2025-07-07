@@ -16,3 +16,10 @@ export interface Note {
   mood: Mood;
   image?: string;
 }
+
+export interface Vow {
+  id: string;
+  title: string;
+  content: string;
+  lastUpdated: string; // ISO String
+}
