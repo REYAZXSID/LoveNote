@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -77,6 +78,7 @@ export function NoteEditorDialog({ children, note }: { children: React.ReactNode
   const handleSelectSuggestion = (suggestion: string) => {
     const currentContent = form.getValues('content');
     form.setValue('content', currentContent ? `${currentContent}\n\n${suggestion}` : suggestion);
+    setSuggestions([]);
   }
 
   const onSubmit = (data: NoteFormData) => {
@@ -101,144 +103,147 @@ export function NoteEditorDialog({ children, note }: { children: React.ReactNode
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-2xl">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-2xl flex flex-col max-h-[90dvh] p-0">
+        <DialogHeader className="p-6 pb-4 flex-shrink-0">
           <DialogTitle className="font-headline text-3xl">{note ? 'Edit Memory' : 'New Memory'}</DialogTitle>
           <DialogDescription>
             {note ? 'Make changes to your memory.' : 'Capture a beautiful moment with your loved one.'}
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div className="flex-grow overflow-y-auto px-6">
+          <Form {...form}>
+            <form id="note-editor-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={'outline'}
+                              className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
+                            >
+                              {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="image"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image URL (Optional)</FormLabel>
+                      <FormControl>
+                          <div className="relative">
+                              <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                              <Input placeholder="https://example.com/image.png" {...field} className="pl-10" />
+                          </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
               <FormField
                 control={form.control}
-                name="date"
+                name="mood"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={'outline'}
-                            className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
-                          >
-                            {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
+                  <FormItem>
+                    <FormLabel>What's the mood?</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="grid grid-cols-3 gap-2 sm:gap-3"
+                      >
+                        {Object.entries(moodEmojis).map(([mood, emoji]) => (
+                          <FormItem key={mood} className="flex items-center">
+                            <FormControl>
+                              <RadioGroupItem value={mood} id={mood} className="sr-only" />
+                            </FormControl>
+                            <FormLabel
+                              htmlFor={mood}
+                              className={cn(
+                                'flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-2 sm:p-3 hover:bg-accent hover:text-accent-foreground cursor-pointer w-full aspect-square transition-all duration-200 hover:scale-105',
+                                field.value === mood && 'border-primary ring-2 ring-primary scale-105 shadow-lg'
+                              )}
+                            >
+                              <span className="text-3xl sm:text-4xl">{emoji}</span>
+                              <span className="text-xs font-medium mt-1">{mood}</span>
+                            </FormLabel>
+                          </FormItem>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
                   </FormItem>
                 )}
               />
-               <FormField
+              
+              <FormField
                 control={form.control}
-                name="image"
+                name="content"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Image URL (Optional)</FormLabel>
+                    <FormLabel>Your sweet words</FormLabel>
                     <FormControl>
-                        <div className="relative">
-                            <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input placeholder="https://example.com/image.png" {...field} className="pl-10" />
-                        </div>
+                      <Textarea placeholder="Pour your heart out..." className="resize-y min-h-[150px]" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-            
-            <FormField
-              control={form.control}
-              name="mood"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>What's the mood?</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="grid grid-cols-3 sm:grid-cols-6 gap-2"
-                    >
-                      {Object.entries(moodEmojis).map(([mood, emoji]) => (
-                        <FormItem key={mood} className="flex items-center">
-                          <FormControl>
-                            <RadioGroupItem value={mood} id={mood} className="sr-only" />
-                          </FormControl>
-                          <FormLabel
-                            htmlFor={mood}
-                            className={cn(
-                              'flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground cursor-pointer w-full aspect-square transition-all duration-200 hover:scale-105',
-                              field.value === mood && 'border-primary ring-2 ring-primary scale-105 shadow-lg'
-                            )}
-                          >
-                            <span className="text-4xl">{emoji}</span>
-                            <span className="text-xs font-medium mt-1">{mood}</span>
-                          </FormLabel>
-                        </FormItem>
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Your sweet words</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Pour your heart out..." className="resize-y min-h-[150px]" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <div className="space-y-2 pt-2">
-                 <Button type="button" variant="ghost" onClick={handleGenerateIdeas} disabled={isGenerating} className="text-primary hover:text-primary">
-                    {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 />}
-                    {isGenerating ? "Thinking of sweet words..." : "AI Inspiration"}
-                 </Button>
-                 {suggestions.length > 0 && (
-                     <div className="space-y-2 rounded-md border bg-muted/50 p-4 animate-fade-in">
-                         <p className="text-sm font-medium text-muted-foreground">Here are a few ideas:</p>
-                         <ul className="list-disc list-inside space-y-1">
-                            {suggestions.map((s, i) => (
-                                <li key={i} className="text-sm cursor-pointer hover:text-primary" onClick={() => handleSelectSuggestion(s)}>
-                                    {s}
-                                </li>
-                            ))}
-                         </ul>
-                     </div>
-                 )}
-            </div>
+              
+               {suggestions.length > 0 && (
+                   <div className="space-y-2 rounded-md border bg-muted/50 p-4 animate-fade-in">
+                       <p className="text-sm font-medium text-muted-foreground">Here are a few ideas:</p>
+                       <ul className="list-disc list-inside space-y-1">
+                          {suggestions.map((s, i) => (
+                              <li key={i} className="text-sm cursor-pointer hover:text-primary" onClick={() => handleSelectSuggestion(s)}>
+                                  {s}
+                              </li>
+                          ))}
+                       </ul>
+                   </div>
+               )}
+            </form>
+          </Form>
+        </div>
 
-            <DialogFooter className="pt-4">
-              <DialogClose asChild>
-                <Button type="button" variant="ghost">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button type="submit" size="lg">Save Note</Button>
-            </DialogFooter>
-          </form>
-        </Form>
+        <DialogFooter className="flex-shrink-0 flex-col-reverse gap-2 sm:flex-row sm:justify-between p-6 border-t bg-background">
+          <Button type="button" variant="ghost" onClick={handleGenerateIdeas} disabled={isGenerating} className="text-primary hover:text-primary sm:justify-start px-0">
+              {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 />}
+              {isGenerating ? "Thinking..." : "AI Inspiration"}
+          </Button>
+          <div className="flex gap-2 justify-end">
+            <DialogClose asChild>
+              <Button type="button" variant="ghost">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="submit" form="note-editor-form" size="lg">Save Note</Button>
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
