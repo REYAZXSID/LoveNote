@@ -30,10 +30,10 @@ export function NotificationModal() {
 
   return (
     <AlertDialog open onOpenChange={handleClose}>
-      <AlertDialogContent className="w-[90vw] max-w-md p-0 overflow-hidden rounded-xl shadow-2xl">
+      <AlertDialogContent className="w-[90vw] max-w-md p-0 rounded-xl shadow-2xl">
          <div className="p-6 pt-12 relative">
            <div className="absolute left-1/2 -translate-x-1/2 -top-12 flex items-center justify-center">
-             <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 to-transparent flex items-center justify-center p-1">
+             <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 to-transparent flex items-center justify-center p-1 animate-pop-in">
                {hasImage ? (
                  <div className="relative h-full w-full rounded-full overflow-hidden shadow-lg">
                    <Image
