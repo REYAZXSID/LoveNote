@@ -26,7 +26,7 @@ export type GenerateNoteIdeasInput = z.infer<typeof GenerateNoteIdeasInputSchema
 const GenerateNoteIdeasOutputSchema = z.object({
   suggestions: z
     .array(z.string())
-    .describe('An array of AI-generated romantic phrases or one-liners.'),
+    .describe('An array of 3 unique, AI-generated romantic phrases or one-liners.'),
 });
 export type GenerateNoteIdeasOutput = z.infer<typeof GenerateNoteIdeasOutputSchema>;
 
@@ -38,10 +38,34 @@ const prompt = ai.definePrompt({
   name: 'generateNoteIdeasPrompt',
   input: {schema: GenerateNoteIdeasInputSchema},
   output: {schema: GenerateNoteIdeasOutputSchema},
-  prompt: `You are a love note writing assistant.  Provide 3 suggestions for romantic phrases or one-liners based on the mood and topic specified.
+  prompt: `You are an eloquent and romantic writing assistant. Your task is to generate 3 unique and creative suggestions for a love note.
+The suggestions should be inspired by the provided mood and optional topic. Each suggestion should be a short phrase or a one-liner.
 
 Mood: {{{mood}}}
-Topic: {{topic}}`,
+{{#if topic}}
+Topic: {{{topic}}}
+{{/if}}
+`,
+  config: {
+    safetySettings: [
+      {
+        category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+      },
+      {
+        category: 'HARM_CATEGORY_HATE_SPEECH',
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+      },
+      {
+        category: 'HARM_CATEGORY_HARASSMENT',
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+      },
+      {
+        category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+      },
+    ],
+  },
 });
 
 const generateNoteIdeasFlow = ai.defineFlow(
@@ -52,6 +76,9 @@ const generateNoteIdeasFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('The AI failed to generate suggestions. Please try again.');
+    }
+    return output;
   }
 );
