@@ -18,38 +18,46 @@ export function NoteCard({ note, className }: NoteCardProps) {
   const noteDate = parseISO(note.date + 'T12:00:00Z');
 
   return (
-    <Card className={cn("relative shadow-xl w-full overflow-hidden transition-all duration-300 hover:shadow-2xl", className)}>
-      <div className={cn("flex flex-col", { "md:flex-row": note.image })}>
-        {note.image && (
-          <div className="md:w-1/3 relative min-h-[200px] md:min-h-0">
-            <Image
-              src={note.image}
-              alt="Memory"
-              fill
-              className="object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
-              data-ai-hint="romantic couple"
-            />
-          </div>
-        )}
-        <div className={cn("flex flex-col", { "md:w-2/3": note.image })}>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between font-headline text-2xl">
-              <span>{format(noteDate, 'MMMM do, yyyy')}</span>
-              <span className="text-3xl ml-4">{moodEmojis[note.mood]}</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex-grow">
-            <p className="text-lg whitespace-pre-wrap leading-relaxed font-body text-foreground/80">"{note.content}"</p>
-          </CardContent>
-          <CardFooter className="flex justify-end mt-auto">
-            <NoteEditorDialog note={note}>
-              <Button variant="secondary" size="sm">
-                <Edit className="mr-2 h-4 w-4" />
-                Edit
-              </Button>
-            </NoteEditorDialog>
-          </CardFooter>
+    <Card className={cn("w-full overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20", className)}>
+      {note.image && (
+        <div className="relative w-full aspect-video">
+          <Image
+            src={note.image}
+            alt="Memory"
+            fill
+            className="object-cover"
+            data-ai-hint="romantic couple"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         </div>
+      )}
+      <div className="flex flex-col">
+        <CardHeader>
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="font-headline text-2xl">
+                {format(noteDate, 'MMMM do, yyyy')}
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">{note.mood}</p>
+            </div>
+            <div className="text-4xl p-2 bg-background rounded-full -mt-2 -mr-2">
+              {moodEmojis[note.mood]}
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="flex-grow">
+          <p className="text-lg whitespace-pre-wrap leading-relaxed font-body text-foreground/80 italic">
+            "{note.content}"
+          </p>
+        </CardContent>
+        <CardFooter className="flex justify-end mt-auto">
+          <NoteEditorDialog note={note}>
+            <Button variant="secondary" size="sm">
+              <Edit className="mr-2 h-4 w-4" />
+              Edit Note
+            </Button>
+          </NoteEditorDialog>
+        </CardFooter>
       </div>
     </Card>
   );
