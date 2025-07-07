@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Heart, MoreVertical, Palette, Images, LayoutDashboard, Calendar, ScrollText } from 'lucide-react';
@@ -39,33 +40,33 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-20 items-center">
-          <Link href="/" className="mr-auto flex items-center gap-2">
+        <div className="container flex h-20 items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
             <Heart className="h-7 w-7 text-primary" />
             <span className="font-headline text-xl font-semibold hidden sm:inline-block">Eternal Echoes</span>
           </Link>
 
-          <TooltipProvider>
-            <nav className="hidden md:flex items-center gap-2">
-              {navItems.map(item => (
-                  <Tooltip key={item.href}>
-                    <TooltipTrigger asChild>
-                      <Button asChild variant={pathname === item.href ? 'secondary' : 'ghost'} size="icon">
-                          <Link href={item.href}>
-                              {item.icon}
-                              <span className="sr-only">{item.label}</span>
-                          </Link>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{item.label}</p>
-                    </TooltipContent>
-                  </Tooltip>
-              ))}
-            </nav>
-          </TooltipProvider>
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <nav className="hidden md:flex items-center gap-2">
+                {navItems.map(item => (
+                    <Tooltip key={item.href}>
+                      <TooltipTrigger asChild>
+                        <Button asChild variant={pathname === item.href ? 'secondary' : 'ghost'} size="icon">
+                            <Link href={item.href}>
+                                {item.icon}
+                                <span className="sr-only">{item.label}</span>
+                            </Link>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{item.label}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                ))}
+              </nav>
+            </TooltipProvider>
 
-          <div className="flex items-center gap-2 md:ml-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
