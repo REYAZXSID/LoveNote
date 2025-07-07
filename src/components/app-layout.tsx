@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, Palette, Images, LayoutDashboard, Calendar, ScrollText } from 'lucide-react';
+import { Heart, Palette, Images, LayoutDashboard, Calendar, ScrollText, PenSquare } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import {
@@ -20,7 +20,7 @@ import { FloatingHearts } from './floating-hearts';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { href: '/', label: "Today's Note", icon: <Heart /> },
+  { href: '/', label: "Today's Note", icon: <PenSquare /> },
   { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard /> },
   { href: '/gallery', label: 'Gallery', icon: <Images /> },
   { href: '/calendar', label: 'Calendar', icon: <Calendar /> },
