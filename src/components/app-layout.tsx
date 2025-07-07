@@ -1,16 +1,12 @@
 'use client';
 
-import { Heart, MoreVertical, Palette, Images, LayoutDashboard, Calendar, ScrollText } from 'lucide-react';
+import { Heart, Palette, Images, LayoutDashboard, Calendar, ScrollText } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -68,37 +64,27 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <MoreVertical className="h-5 w-5" />
-                  <span className="sr-only">More options</span>
+                  <Palette className="h-5 w-5" />
+                  <span className="sr-only">Change Theme</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <Palette />
-                    <span>Theme</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem onClick={() => setTheme('rose')}>
-                        <div className="mr-2 h-4 w-4 rounded-full bg-[#fbe2e3] border border-[#f5c6cb]"></div>
-                        <span>Romantic Rose</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTheme('gold')}>
-                         <div className="mr-2 h-4 w-4 rounded-full bg-[#fef3c7] border border-[#fde68a]"></div>
-                        <span>Golden Sunshine</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTheme('ocean')}>
-                         <div className="mr-2 h-4 w-4 rounded-full bg-[#cffafe] border border-[#a5f3fc]"></div>
-                        <span>Oceanic Serenity</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTheme('night')}>
-                         <div className="mr-2 h-4 w-4 rounded-full bg-slate-800 border border-slate-700"></div>
-                        <span>Midnight Rose</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
+                <DropdownMenuItem onClick={() => setTheme('rose')}>
+                  <div className="mr-2 h-4 w-4 rounded-full bg-[#fbe2e3] border border-[#f5c6cb]"></div>
+                  <span>Romantic Rose</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('gold')}>
+                   <div className="mr-2 h-4 w-4 rounded-full bg-[#fef3c7] border border-[#fde68a]"></div>
+                  <span>Golden Sunshine</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('ocean')}>
+                   <div className="mr-2 h-4 w-4 rounded-full bg-[#cffafe] border border-[#a5f3fc]"></div>
+                  <span>Oceanic Serenity</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('night')}>
+                   <div className="mr-2 h-4 w-4 rounded-full bg-slate-800 border border-slate-700"></div>
+                  <span>Midnight Rose</span>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
