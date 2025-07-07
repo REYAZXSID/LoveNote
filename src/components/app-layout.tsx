@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Heart, MoreVertical, Palette, Images, LayoutDashboard, Calendar, ScrollText } from 'lucide-react';
@@ -9,7 +8,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuPortal,
-  DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -46,9 +44,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <span className="font-headline text-xl font-semibold hidden sm:inline-block">Eternal Echoes</span>
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <TooltipProvider>
-              <nav className="hidden md:flex items-center gap-2">
+              <nav className="flex items-center gap-1">
                 {navItems.map(item => (
                     <Tooltip key={item.href}>
                       <TooltipTrigger asChild>
@@ -75,17 +73,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <div className='md:hidden'>
-                    {navItems.map(item => (
-                        <DropdownMenuItem key={item.href} asChild>
-                             <Link href={item.href} className="flex items-center gap-3 py-1.5">
-                                {item.icon}
-                                <span>{item.label}</span>
-                            </Link>
-                        </DropdownMenuItem>
-                    ))}
-                    <DropdownMenuSeparator />
-                </div>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
                     <Palette />
