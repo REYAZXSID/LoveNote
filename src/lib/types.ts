@@ -14,4 +14,5 @@ export interface Note {
   date: string; // YYYY-MM-DD
   content: string;
   mood: Mood;
+  image?: string;
 }
