@@ -138,16 +138,16 @@
     50%,
     70%,
     90% {
-      transform: rotate(15deg);
+      transform: rotate(10deg);
     }
     20%,
     40%,
     60%,
     80% {
-      transform: rotate(-15deg);
+      transform: rotate(-10deg);
     }
   }
   .animate-bell-ring {
-    animation: bell-ring 1.5s ease-in-out;
+    animation: bell-ring 1s ease-in-out;
   }
 }

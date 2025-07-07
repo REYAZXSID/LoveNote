@@ -29,7 +29,7 @@ export function NotificationModal() {
 
   return (
     <AlertDialog open onOpenChange={handleClose}>
-      <AlertDialogContent className="max-w-md p-0 overflow-hidden">
+      <AlertDialogContent className="max-w-md p-0 overflow-hidden rounded-xl shadow-2xl">
         {notification.image && (
           <div className="relative w-full aspect-video">
             <Image
@@ -38,30 +38,33 @@ export function NotificationModal() {
               fill
               className="object-cover"
               data-ai-hint="couple celebration"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
         )}
-        <div className="p-6 pt-4 relative">
+        <div className="p-6 pt-2 relative">
           <div className={cn(
-              "absolute left-1/2 -translate-x-1/2 p-3 bg-background rounded-full border-4 border-background shadow-lg",
-              notification.image ? "-top-8" : "relative -top-2"
+            "flex items-center justify-center h-16 w-16 bg-background rounded-full shadow-lg",
+            notification.image ? "absolute left-1/2 -translate-x-1/2 -top-8" : "relative mx-auto mb-4"
           )}>
-            <BellRing className="h-8 w-8 text-primary animate-bell-ring" />
+             <div className="h-14 w-14 rounded-full bg-gradient-to-br from-primary/20 to-transparent flex items-center justify-center">
+                 <BellRing className="h-8 w-8 text-primary animate-bell-ring" />
+             </div>
           </div>
 
-          <AlertDialogHeader className="text-center items-center space-y-2 pt-8">
-            <AlertDialogTitle className="font-headline text-2xl">
-                {notification.title}
+          <AlertDialogHeader className={cn("text-center items-center space-y-2", notification.image ? "pt-8" : "pt-0")}>
+            <AlertDialogTitle className="font-headline text-2xl md:text-3xl">
+                {notification.title || "Notification"}
             </AlertDialogTitle>
             {notification.body && (
-                <AlertDialogDescription className="text-base text-muted-foreground">
+                <AlertDialogDescription className="text-base text-muted-foreground leading-relaxed">
                 {notification.body}
                 </AlertDialogDescription>
             )}
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-6">
             <AlertDialogAction asChild>
-              <Button onClick={handleClose} className="w-full">Close</Button>
+              <Button onClick={handleClose} className="w-full" size="lg">Close</Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </div>
