@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
 import { NotificationModal } from '@/components/notification-modal';
 import { Inter, Lora } from 'next/font/google';
+import { BackgroundMusic } from '@/components/background-music';
 
 const fontInter = Inter({
   subsets: ['latin'],
@@ -37,6 +38,7 @@ export default function RootLayout({
           <Toaster />
           <NotificationModal />
         </AppProviders>
+        <BackgroundMusic />
       </body>
     </html>
   );
