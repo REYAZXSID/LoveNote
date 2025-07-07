@@ -11,7 +11,7 @@ import { useVows } from '@/hooks/use-vows';
 import { Vow } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { Plus, Trash, Save } from 'lucide-react';
+import { Plus, Trash, Save, BookHeart } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function VowsPage() {
@@ -24,6 +24,9 @@ export default function VowsPage() {
   useEffect(() => {
     if (vows.length > 0 && !selectedVow) {
       setSelectedVow(vows[0]);
+    }
+     if (vows.length === 0) {
+      setSelectedVow(null);
     }
   }, [vows, selectedVow]);
 
@@ -74,23 +77,24 @@ export default function VowsPage() {
   const handleDelete = (vowId: string) => {
     deleteVow(vowId);
     if (selectedVow?.id === vowId) {
-      setSelectedVow(null);
+      const nextVow = vows.find(v => v.id !== vowId) || null;
+      setSelectedVow(nextVow);
     }
     toast({ title: 'Vow Deleted', description: 'The vow has been removed.' });
   };
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 md:min-h-[75vh] animate-fade-in">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 min-h-[calc(100vh-12rem)] animate-fade-in">
       <Card className="md:col-span-1 flex flex-col">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Your Vows</CardTitle>
+          <CardTitle className="font-headline text-2xl">Your Vows</CardTitle>
           <Button variant="ghost" size="icon" onClick={handleNewVow}>
-            <Plus className="h-4 w-4" />
+            <Plus className="h-5 w-5" />
           </Button>
         </CardHeader>
         <CardContent className="flex-grow p-0">
           <ScrollArea className="h-full">
-            <div className="p-2 md:p-6 pt-0 space-y-2">
+            <div className="p-2 md:p-4 pt-0 space-y-2">
             {vows.length > 0 ? (
               vows.map((vow) => (
                 <div
@@ -99,13 +103,13 @@ export default function VowsPage() {
                     'p-3 rounded-lg cursor-pointer border-2 transition-all duration-200',
                     selectedVow?.id === vow.id
                       ? 'border-primary bg-primary/10 shadow-inner'
-                      : 'border-transparent hover:bg-muted/50 hover:border-border'
+                      : 'border-transparent hover:bg-muted'
                   )}
                   onClick={() => handleSelectVow(vow)}
                 >
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start gap-2">
                     <div className="flex-1 overflow-hidden">
-                      <h3 className="font-semibold truncate">{vow.title}</h3>
+                      <h3 className="font-semibold truncate font-body">{vow.title}</h3>
                       <p className="text-xs text-muted-foreground">
                         Updated {formatDistanceToNow(new Date(vow.lastUpdated), { addSuffix: true })}
                       </p>
@@ -117,8 +121,10 @@ export default function VowsPage() {
                 </div>
               ))
             ) : (
-                <div className="text-center text-muted-foreground p-8">
-                    <p>No vows yet. Click the '+' to start writing.</p>
+                <div className="text-center text-muted-foreground p-8 flex flex-col items-center justify-center h-full">
+                    <BookHeart className="w-12 h-12 text-muted-foreground/30 mb-4" />
+                    <p className="font-semibold">No vows yet.</p>
+                    <p className="text-sm">Click the '+' to start writing.</p>
                 </div>
             )}
             </div>
@@ -128,27 +134,29 @@ export default function VowsPage() {
 
       <Card className="md:col-span-2 flex flex-col">
         <CardHeader>
-          <CardTitle>Editor</CardTitle>
+          <CardTitle className="font-headline text-2xl">Vow Editor</CardTitle>
           <CardDescription>
-            {selectedVow ? 'Edit your vow below.' : 'Create a new vow to cherish forever.'}
+            {selectedVow ? 'Edit your commitment below.' : 'Create a new vow to cherish forever.'}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex-grow flex flex-col gap-4">
           <Input
-            placeholder="Vow Title (e.g., My Vows to My Love)"
+            placeholder="Vow Title (e.g., My Promise to You)"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-lg font-semibold"
+            className="text-lg font-semibold font-body"
+            disabled={!selectedVow}
           />
           <Textarea
             placeholder="Write your heart out..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="flex-grow resize-none font-body text-base leading-relaxed min-h-[250px] md:min-h-0"
+            disabled={!selectedVow}
           />
            <div className="flex justify-end">
             <Button onClick={handleSave} disabled={!selectedVow}>
-              <Save className="mr-2 h-4 w-4" />
+              <Save />
               Save Vow
             </Button>
           </div>

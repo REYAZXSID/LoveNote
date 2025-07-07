@@ -1,7 +1,7 @@
 export type Mood = 'Happy' | 'Romantic' | 'Peaceful' | 'Excited' | 'Playful' | 'Longing';
 
 export const moodEmojis: Record<Mood, string> = {
-  Happy: '😊',
+  Happy: '😄',
   Romantic: '🥰',
   Peaceful: '😌',
   Excited: '🤩',

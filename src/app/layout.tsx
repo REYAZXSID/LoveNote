@@ -5,6 +5,17 @@ import { AppLayout } from '@/components/app-layout';
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
 import { NotificationModal } from '@/components/notification-modal';
+import { Inter, Lora } from 'next/font/google';
+
+const fontInter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
+
+const fontLora = Lora({
+  subsets: ['latin'],
+  variable: '--font-lora',
+});
 
 export const metadata: Metadata = {
   title: 'Eternal Echoes',
@@ -18,12 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
-      <body className={cn("font-body antialiased", "min-h-screen bg-background font-sans")}>
+      <body className={cn("min-h-screen bg-background font-body antialiased", fontInter.variable, fontLora.variable)}>
         <AppProviders>
           <AppLayout>
             {children}

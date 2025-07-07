@@ -103,7 +103,7 @@ export function NoteEditorDialog({ children, note }: { children: React.ReactNode
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="font-headline text-2xl">{note ? 'Edit Note' : 'Create New Note'}</DialogTitle>
+          <DialogTitle className="font-headline text-3xl">{note ? 'Edit Memory' : 'New Memory'}</DialogTitle>
           <DialogDescription>
             {note ? 'Make changes to your memory.' : 'Capture a beautiful moment with your loved one.'}
           </DialogDescription>
@@ -148,7 +148,7 @@ export function NoteEditorDialog({ children, note }: { children: React.ReactNode
                 name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Image URL</FormLabel>
+                    <FormLabel>Image URL (Optional)</FormLabel>
                     <FormControl>
                         <div className="relative">
                             <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -182,10 +182,10 @@ export function NoteEditorDialog({ children, note }: { children: React.ReactNode
                             htmlFor={mood}
                             className={cn(
                               'flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground cursor-pointer w-full aspect-square transition-all duration-200 hover:scale-105',
-                              field.value === mood && 'border-primary ring-2 ring-primary scale-110'
+                              field.value === mood && 'border-primary ring-2 ring-primary scale-105 shadow-lg'
                             )}
                           >
-                            <span className="text-3xl">{emoji}</span>
+                            <span className="text-4xl">{emoji}</span>
                             <span className="text-xs font-medium mt-1">{mood}</span>
                           </FormLabel>
                         </FormItem>
@@ -212,11 +212,11 @@ export function NoteEditorDialog({ children, note }: { children: React.ReactNode
             
             <div className="space-y-2 pt-2">
                  <Button type="button" variant="ghost" onClick={handleGenerateIdeas} disabled={isGenerating} className="text-primary hover:text-primary">
-                    {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                    {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 />}
                     {isGenerating ? "Thinking of sweet words..." : "AI Inspiration"}
                  </Button>
                  {suggestions.length > 0 && (
-                     <div className="space-y-2 rounded-md border bg-muted/50 p-4">
+                     <div className="space-y-2 rounded-md border bg-muted/50 p-4 animate-fade-in">
                          <p className="text-sm font-medium text-muted-foreground">Here are a few ideas:</p>
                          <ul className="list-disc list-inside space-y-1">
                             {suggestions.map((s, i) => (

@@ -1,7 +1,7 @@
 'use client';
 
 import { Note, moodEmojis } from '@/lib/types';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { format, parseISO } from 'date-fns';
 import { NoteEditorDialog } from './note-editor-dialog';
 import { Button } from './ui/button';
@@ -18,46 +18,41 @@ export function NoteCard({ note, className }: NoteCardProps) {
   const noteDate = parseISO(note.date + 'T12:00:00Z');
 
   return (
-    <Card className={cn("w-full overflow-hidden transition-all duration-300 shadow-lg hover:shadow-primary/20 hover:-translate-y-1", className)}>
+    <Card className={cn("w-full overflow-hidden transition-all duration-300 shadow-md hover:shadow-primary/20 hover:shadow-xl hover:-translate-y-1 group", className)}>
       {note.image && (
-        <div className="relative w-full aspect-video">
+        <div className="relative w-full aspect-video overflow-hidden">
           <Image
             src={note.image}
             alt="Memory"
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
             data-ai-hint="romantic couple"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
       )}
-      <div className="flex flex-col">
-        <CardHeader>
-          <div className="flex justify-between items-start">
+      <div className="flex flex-col p-6">
+        <header className="mb-4">
+           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="font-headline text-2xl">
-                {format(noteDate, 'MMMM do, yyyy')}
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">{note.mood}</p>
+              <p className="text-sm font-semibold text-primary">{format(noteDate, 'MMMM do, yyyy')}</p>
+              <p className="text-sm text-muted-foreground flex items-center gap-2">
+                 <span>{moodEmojis[note.mood]}</span> {note.mood}
+              </p>
             </div>
-            <div className="text-4xl p-2 bg-background rounded-full -mt-2 -mr-2">
-              {moodEmojis[note.mood]}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          <p className="text-lg whitespace-pre-wrap leading-relaxed font-body text-foreground/80 italic">
-            "{note.content}"
+            <NoteEditorDialog note={note}>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity">
+                  <Edit />
+                </Button>
+              </NoteEditorDialog>
+           </div>
+        </header>
+        
+        <div className="flex-grow">
+          <p className="text-base/relaxed font-body text-foreground/90">
+            {note.content}
           </p>
-        </CardContent>
-        <CardFooter className="flex justify-end mt-auto">
-          <NoteEditorDialog note={note}>
-            <Button variant="secondary" size="sm">
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Note
-            </Button>
-          </NoteEditorDialog>
-        </CardFooter>
+        </div>
       </div>
     </Card>
   );

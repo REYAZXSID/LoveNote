@@ -8,6 +8,7 @@ import { useNotes } from '@/hooks/use-notes';
 import { Heart, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import { DayPicker } from 'react-day-picker';
+import { format } from 'date-fns';
 
 export default function CalendarPage() {
   const { notes, getNoteByDate } = useNotes();
@@ -30,14 +31,14 @@ export default function CalendarPage() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in">
-      <div className="md:col-span-1 flex flex-col items-center">
-        <h1 className="text-3xl font-bold font-headline mb-4">Our Timeline</h1>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in">
+      <div className="lg:col-span-1 flex flex-col items-center">
+        <h1 className="text-3xl font-bold font-headline mb-4 text-center">Our Timeline</h1>
         <Calendar
           mode="single"
           selected={date}
           onSelect={setDate}
-          className="rounded-lg border w-full bg-card shadow-lg"
+          className="rounded-xl border w-full bg-card shadow-sm"
           modifiers={modifiers}
           modifiersStyles={modifiersStyles}
           components={{
@@ -53,20 +54,23 @@ export default function CalendarPage() {
           }}
         />
       </div>
-      <div className="md:col-span-2">
-        <div className="p-4 rounded-lg bg-card/50 min-h-[400px] flex items-center justify-center">
+      <div className="lg:col-span-2">
+        <div className="p-4 rounded-xl bg-card/50 min-h-[400px] lg:min-h-full flex items-center justify-center">
           {selectedNote ? (
-            <NoteCard key={selectedNote.id} note={selectedNote} className="bg-card shadow-none border-0 w-full animate-scale-in" />
+            <div className="w-full max-w-2xl animate-scale-in">
+              <NoteCard key={selectedNote.id} note={selectedNote} className="bg-card shadow-lg" />
+            </div>
           ) : (
             <div className="flex flex-col h-full items-center justify-center text-center p-12 animate-fade-in">
-              <Heart className="w-16 h-16 text-muted-foreground/30 mb-4" />
-              <h2 className="text-2xl font-semibold font-headline">No Note for This Day</h2>
+              <Heart className="w-16 h-16 text-muted-foreground/20 mb-4" />
+              <h2 className="text-2xl font-semibold font-headline">Select a Day</h2>
               <p className="text-muted-foreground mt-2 mb-6 max-w-sm">
-                Every day is a chance to express your love. Why not add a memory?
+                Pick a date from the calendar to view a memory, or write a new one for{' '}
+                <span className="font-semibold text-foreground">{date ? format(date, "MMMM do") : 'today'}</span>.
               </p>
               <NoteEditorDialog>
                 <Button>
-                  <PlusCircle className="mr-2 h-4 w-4" />
+                  <PlusCircle />
                   Write a Note for this Day
                 </Button>
               </NoteEditorDialog>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, MoreVertical, Moon, Palette, Images, LayoutDashboard, Calendar, ScrollText } from 'lucide-react';
+import { Heart, MoreVertical, Palette, Images, LayoutDashboard, Calendar, ScrollText } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import {
@@ -19,11 +19,11 @@ import { FloatingHearts } from './floating-hearts';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { href: '/', label: "Today's Note", icon: <Heart className="h-4 w-4" /> },
-  { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-4 w-4" /> },
-  { href: '/gallery', label: 'Gallery', icon: <Images className="h-4 w-4" /> },
-  { href: '/calendar', label: 'Calendar', icon: <Calendar className="h-4 w-4" /> },
-  { href: '/vows', label: 'Our Vows', icon: <ScrollText className="h-4 w-4" /> },
+  { href: '/', label: "Today's Note", icon: <Heart /> },
+  { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard /> },
+  { href: '/gallery', label: 'Gallery', icon: <Images /> },
+  { href: '/calendar', label: 'Calendar', icon: <Calendar /> },
+  { href: '/vows', label: 'Our Vows', icon: <ScrollText /> },
 ];
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -33,10 +33,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center">
+        <div className="container flex h-20 items-center">
           <Link href="/" className="mr-auto flex items-center gap-2">
-            <Heart className="h-6 w-6 text-primary" />
-            <span className="font-headline text-lg font-semibold hidden sm:inline-block">Eternal Echoes</span>
+            <Heart className="h-7 w-7 text-primary" />
+            <span className="font-headline text-xl font-semibold hidden sm:inline-block">Eternal Echoes</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
              {navItems.map(item => (
@@ -45,7 +45,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </Link>
              ))}
           </nav>
-          <div className="ml-auto md:ml-4">
+          <div className="ml-auto flex items-center gap-2 md:ml-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
@@ -53,11 +53,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   <span className="sr-only">More options</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-56">
                 <div className='md:hidden'>
                     {navItems.map(item => (
                         <DropdownMenuItem key={item.href} asChild>
-                             <Link href={item.href} className="flex items-center gap-2">
+                             <Link href={item.href} className="flex items-center gap-3 py-1.5">
                                 {item.icon}
                                 <span>{item.label}</span>
                             </Link>
@@ -67,25 +67,25 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </div>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
-                    <Palette className="mr-2 h-4 w-4" />
+                    <Palette />
                     <span>Theme</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
                       <DropdownMenuItem onClick={() => setTheme('rose')}>
-                        <span className="mr-2 h-4 w-4 rounded-full bg-pink-100 border border-pink-200"></span>
+                        <div className="mr-2 h-4 w-4 rounded-full bg-[#fbe2e3] border border-[#f5c6cb]"></div>
                         <span>Romantic Rose</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setTheme('gold')}>
-                        <span className="mr-2 h-4 w-4 rounded-full bg-amber-100 border border-amber-200"></span>
+                         <div className="mr-2 h-4 w-4 rounded-full bg-[#fef3c7] border border-[#fde68a]"></div>
                         <span>Golden Sunshine</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setTheme('ocean')}>
-                        <span className="mr-2 h-4 w-4 rounded-full bg-cyan-100 border border-cyan-200"></span>
+                         <div className="mr-2 h-4 w-4 rounded-full bg-[#cffafe] border border-[#a5f3fc]"></div>
                         <span>Oceanic Serenity</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setTheme('night')}>
-                         <span className="mr-2 h-4 w-4 rounded-full bg-slate-800 border border-slate-700"></span>
+                         <div className="mr-2 h-4 w-4 rounded-full bg-slate-800 border border-slate-700"></div>
                         <span>Midnight Rose</span>
                       </DropdownMenuItem>
                     </DropdownMenuSubContent>
@@ -96,7 +96,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </header>
-      <main className="flex-1 container py-4 md:py-8 relative">
+      <main className="flex-1 container py-8 md:py-12 relative">
         {children}
         <FloatingHearts />
       </main>
