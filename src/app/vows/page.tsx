@@ -22,13 +22,28 @@ export default function VowsPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (vows.length > 0 && !selectedVow) {
+    // This effect ensures the selected vow is always valid and in sync with the vows list.
+    
+    // Case 1: No vows exist. Ensure nothing is selected.
+    if (vows.length === 0) {
+      if (selectedVow !== null) setSelectedVow(null);
+      return;
+    }
+
+    // Case 2: A vow is selected, but it's no longer in the list (e.g., it was deleted).
+    // We select the first vow in the updated list to ensure the UI is not in an invalid state.
+    if (selectedVow && !vows.some(v => v.id === selectedVow.id)) {
       setSelectedVow(vows[0]);
+      return;
     }
-     if (vows.length === 0) {
-      setSelectedVow(null);
+    
+    // Case 3: No vow is selected, but there are vows in the list.
+    // We select the first one (e.g., on initial load, or after adding the very first vow).
+    if (!selectedVow && vows.length > 0) {
+      setSelectedVow(vows[0]);
+      return;
     }
-  }, [vows, selectedVow]);
+  }, [vows]);
 
   useEffect(() => {
     if (selectedVow) {
@@ -67,20 +82,12 @@ export default function VowsPage() {
         lastUpdated: new Date().toISOString(),
       });
       toast({ title: 'Vow Updated', description: 'Your vow has been saved successfully.' });
-    } else {
-      const newVow = addVow({ title, content });
-      setSelectedVow(newVow);
-      toast({ title: 'Vow Saved', description: 'Your new vow is safely stored.' });
     }
   };
 
   const handleDelete = (vowId: string) => {
     deleteVow(vowId);
-    if (selectedVow?.id === vowId) {
-      const nextVow = vows.find(v => v.id !== vowId) || null;
-      setSelectedVow(nextVow);
-    }
-    toast({ title: 'Vow Deleted', description: 'The vow has been removed.' });
+    toast({ title: 'Vow Deleted', description: 'The vow has been removed.', variant: 'destructive' });
   };
   
   return (

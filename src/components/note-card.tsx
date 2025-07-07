@@ -32,27 +32,23 @@ export function NoteCard({ note, className }: NoteCardProps) {
         </div>
       )}
       <div className="flex flex-col p-6">
-        <header className="mb-4">
-           <div className="flex justify-between items-start">
-            <div>
-              <p className="text-sm font-semibold text-primary">{format(noteDate, 'MMMM do, yyyy')}</p>
-              <p className="text-sm text-muted-foreground flex items-center gap-2">
-                 <span>{moodEmojis[note.mood]}</span> {note.mood}
-              </p>
-            </div>
-            <NoteEditorDialog note={note}>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity">
-                  <Edit />
-                </Button>
-              </NoteEditorDialog>
-           </div>
-        </header>
-        
-        <div className="flex-grow">
-          <p className="text-base/relaxed font-body text-foreground/90">
-            {note.content}
-          </p>
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-primary">{format(noteDate, 'MMMM do, yyyy')}</p>
+            <p className="text-sm text-muted-foreground flex items-center gap-2">
+               <span>{moodEmojis[note.mood]}</span> {note.mood}
+            </p>
+          </div>
+          <NoteEditorDialog note={note}>
+              <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+                <Edit className="h-4 w-4" />
+              </Button>
+            </NoteEditorDialog>
         </div>
+        
+        <p className="flex-grow text-base/relaxed font-body text-foreground/90">
+          {note.content}
+        </p>
       </div>
     </Card>
   );
