@@ -4,11 +4,16 @@
 import { useToast } from "@/hooks/use-toast";
 import { app } from "@/lib/firebase";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
+
+const FCM_MUTED_KEY = 'eternal-echoes-fcm-muted';
 
 interface FcmContextType {
     fcmToken: string | null;
     notificationPermission: NotificationPermission;
+    isMuted: boolean;
+    toggleMute: () => void;
+    requestNotificationPermission: () => Promise<void>;
 }
 
 export const FcmContext = createContext<FcmContextType | null>(null);
@@ -17,39 +22,75 @@ export function FcmProvider({ children }: { children: React.ReactNode }) {
     const { toast } = useToast();
     const [fcmToken, setFcmToken] = useState<string | null>(null);
     const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
+    const [isMuted, setIsMuted] = useState<boolean>(true);
 
     useEffect(() => {
+        // Set initial muted state from localStorage, default to true if not set
+        setIsMuted(localStorage.getItem(FCM_MUTED_KEY) !== 'false');
+        // Set initial permission state
+        if (typeof window !== 'undefined' && 'Notification' in window) {
+            setNotificationPermission(Notification.permission);
+        }
+    }, []);
+    
+    const requestNotificationPermission = useCallback(async () => {
         if (typeof window !== 'undefined' && 'serviceWorker' in navigator && process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY) {
-            const messaging = getMessaging(app);
-            
-            const requestAndRegister = async () => {
-                try {
-                    // Check initial permission state
-                    setNotificationPermission(Notification.permission);
+            try {
+                const permission = await Notification.requestPermission();
+                setNotificationPermission(permission);
 
-                    // Request permission
-                    const permission = await Notification.requestPermission();
-                    setNotificationPermission(permission);
+                const newMutedState = permission !== 'granted';
+                setIsMuted(newMutedState);
+                localStorage.setItem(FCM_MUTED_KEY, String(newMutedState));
 
-                    if (permission === 'granted') {
-                        const currentToken = await getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY });
-                        if (currentToken) {
-                            setFcmToken(currentToken);
-                            console.log('FCM Token:', currentToken);
-                        } else {
-                            console.log('No registration token available. Request permission to generate one.');
-                        }
+            } catch (error) {
+                console.error("Error requesting notification permission:", error);
+            }
+        }
+    }, []);
+
+    const toggleMute = useCallback(() => {
+        if (notificationPermission === 'granted') {
+             setIsMuted(prevMuted => {
+                const newMutedState = !prevMuted;
+                localStorage.setItem(FCM_MUTED_KEY, String(newMutedState));
+                return newMutedState;
+            });
+        } else {
+            requestNotificationPermission();
+        }
+    }, [notificationPermission, requestNotificationPermission]);
+
+
+    useEffect(() => {
+        if (typeof window === 'undefined' || !('serviceWorker' in navigator) || !process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY) {
+            return;
+        }
+
+        const messaging = getMessaging(app);
+
+        // Get token logic
+        if (notificationPermission === 'granted' && !isMuted) {
+            getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY })
+                .then(currentToken => {
+                    if (currentToken) {
+                        setFcmToken(currentToken);
+                        console.log('FCM Token:', currentToken);
                     } else {
-                        console.log('Unable to get permission to notify.');
+                        console.log('No registration token available. Request permission to generate one.');
+                        setFcmToken(null);
                     }
-                } catch (error) {
-                    console.error('An error occurred while retrieving token. ', error);
-                }
-            };
+                })
+                .catch(err => {
+                    console.error('An error occurred while retrieving token. ', err);
+                    setFcmToken(null);
+                });
+        } else {
+            setFcmToken(null);
+        }
 
-            requestAndRegister();
-
-            // Handle foreground messages
+        // Foreground message handler
+        if (notificationPermission === 'granted' && !isMuted) {
             const unsubscribe = onMessage(messaging, (payload) => {
                 console.log('Foreground message received.', payload);
                 toast({
@@ -59,15 +100,13 @@ export function FcmProvider({ children }: { children: React.ReactNode }) {
                 });
             });
             
-            return () => {
-                unsubscribe();
-            };
+            return () => unsubscribe();
         }
-    }, [toast]);
+    }, [notificationPermission, isMuted, toast]);
     
     return (
-        <FcmContext.Provider value={{ fcmToken, notificationPermission }}>
+        <FcmContext.Provider value={{ fcmToken, notificationPermission, isMuted, toggleMute, requestNotificationPermission }}>
             {children}
         </FcmContext.Provider>
-    )
+    );
 }

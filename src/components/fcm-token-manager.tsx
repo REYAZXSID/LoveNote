@@ -7,9 +7,10 @@ import { Button } from './ui/button';
 import { Copy, BellRing, BellOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from './ui/input';
+import { Switch } from './ui/switch';
 
 export function FcmTokenManager() {
-  const { fcmToken, notificationPermission } = useFcm();
+  const { fcmToken, notificationPermission, isMuted, toggleMute } = useFcm();
   const { toast } = useToast();
 
   const handleCopy = () => {
@@ -18,6 +19,8 @@ export function FcmTokenManager() {
       toast({ title: 'Copied!', description: 'FCM token copied to clipboard.' });
     }
   };
+
+  const isEnabled = notificationPermission === 'granted' && !isMuted;
 
   if (notificationPermission === 'denied') {
     return (
@@ -35,18 +38,36 @@ export function FcmTokenManager() {
     );
   }
 
-  if (notificationPermission === 'granted' && fcmToken) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Notifications Enabled</CardTitle>
-          <CardDescription>
-            You're all set to receive push notifications. You can send a test message from the Firebase Console using the token below.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-            <p className="text-sm font-medium">Your FCM Token:</p>
-            <div className="flex gap-2">
+  return (
+    <Card>
+      <CardHeader className="flex-row items-center justify-between space-y-0 pb-4">
+        <div className="flex items-center gap-4">
+          {isEnabled
+            ? <BellRing className="h-6 w-6 text-primary" />
+            : <BellOff className="h-6 w-6 text-muted-foreground" />
+          }
+          <div>
+            <CardTitle>Push Notifications</CardTitle>
+            <CardDescription>
+              {notificationPermission !== 'granted'
+                ? "Enable to receive updates and reminders."
+                : isMuted
+                ? "Notifications are currently paused."
+                : "You're all set to receive notifications."
+              }
+            </CardDescription>
+          </div>
+        </div>
+        <Switch
+          checked={isEnabled}
+          onCheckedChange={toggleMute}
+          aria-label="Toggle notifications"
+        />
+      </CardHeader>
+      {isEnabled && fcmToken && (
+        <CardContent>
+            <p className="text-sm font-medium">Your FCM Token for Testing:</p>
+            <div className="flex gap-2 pt-2">
                 <Input readOnly value={fcmToken} className="truncate bg-muted/50" />
                 <Button variant="outline" size="icon" onClick={handleCopy} aria-label="Copy FCM Token">
                     <Copy className="h-4 w-4" />
@@ -56,24 +77,7 @@ export function FcmTokenManager() {
               To test, go to your Firebase project &gt; Engage &gt; Messaging &gt; Create your first campaign. Use this token to send a test message to this device.
             </p>
         </CardContent>
-      </Card>
-    );
-  }
-  
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Enable Push Notifications</CardTitle>
-        <CardDescription>
-          Enable push notifications to get real-time updates and reminders from your loved one.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-          <div className="flex items-center justify-center p-4 border-2 border-dashed rounded-lg bg-card">
-            <BellRing className="w-8 h-8 text-muted-foreground/50 mr-4 animate-pulse" />
-            <p className="text-muted-foreground">Waiting for notification permission...</p>
-          </div>
-      </CardContent>
+      )}
     </Card>
   );
 }
