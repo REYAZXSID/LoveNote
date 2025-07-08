@@ -6,16 +6,22 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { useNotes } from '@/hooks/use-notes';
 import { Heart, PlusCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function CalendarPage() {
-  const { notes, getNoteByDate } = useNotes();
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const { notes, getNoteByDate, isNotesLoaded } = useNotes();
+  const [date, setDate] = useState<Date | undefined>(undefined);
+
+  useEffect(() => {
+    // This effect runs only on the client, after hydration.
+    setDate(new Date());
+  }, []);
 
   const selectedNote = date ? getNoteByDate(date) : undefined;
   
-  const noteDays = notes.map(note => new Date(note.date + 'T12:00:00Z'));
+  const noteDays = isNotesLoaded ? notes.map(note => new Date(note.date + 'T12:00:00Z')) : [];
 
   const modifiers = {
     hasNote: noteDays,
@@ -28,6 +34,20 @@ export default function CalendarPage() {
       borderRadius: 'var(--radius)',
     }
   };
+
+  if (!date || !isNotesLoaded) {
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-pulse">
+            <div className="lg:col-span-1 flex flex-col items-center">
+                <Skeleton className="h-10 w-1/2 mb-4" />
+                <Skeleton className="rounded-xl border w-full h-80" />
+            </div>
+            <div className="lg:col-span-2">
+                <Skeleton className="rounded-xl w-full h-[400px] lg:h-full" />
+            </div>
+        </div>
+    )
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in">

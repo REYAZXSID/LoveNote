@@ -2,10 +2,34 @@
 
 import { NoteCard } from '@/components/note-card';
 import { useNotes } from '@/hooks/use-notes';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useEffect, useState } from 'react';
 
 export default function GalleryPage() {
-    const { notes } = useNotes();
+    const { notes, isNotesLoaded } = useNotes();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+    
     const sortedNotes = notes.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    if (!isClient) {
+        return (
+            <div className="container mx-auto px-4 py-8">
+                <div className="text-center mb-12">
+                    <Skeleton className="h-12 w-2/3 mx-auto" />
+                    <Skeleton className="h-6 w-1/2 mx-auto mt-4" />
+                </div>
+                <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
+                    {Array.from({ length: 8 }).map((_, i) => (
+                        <Skeleton key={i} className="h-64 w-full rounded-lg" />
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="container mx-auto px-4 py-8 animate-fade-in">

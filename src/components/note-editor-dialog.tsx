@@ -25,7 +25,7 @@ import { Calendar } from './ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { generateNoteIdeas } from '@/app/actions';
 import { Input } from './ui/input';
@@ -50,13 +50,21 @@ export function NoteEditorDialog({ children, note }: { children: React.ReactNode
 
   const form = useForm<NoteFormData>({
     resolver: zodResolver(noteSchema),
-    defaultValues: {
-      date: note ? new Date(note.date + 'T12:00:00Z') : new Date(),
-      mood: note ? note.mood : 'Romantic',
-      content: note ? note.content : '',
-      image: note ? note.image : '',
-    },
   });
+
+  useEffect(() => {
+    // Safely reset the form with client-side data when the dialog opens
+    if (open) {
+      form.reset({
+        date: note ? new Date(note.date + 'T12:00:00Z') : new Date(),
+        mood: note ? note.mood : 'Romantic',
+        content: note ? note.content : '',
+        image: note ? note.image : '',
+      });
+      setSuggestions([]);
+    }
+  }, [open, note, form]);
+
 
   const handleGenerateIdeas = async () => {
     setIsGenerating(true);

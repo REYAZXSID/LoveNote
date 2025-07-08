@@ -17,10 +17,11 @@ import {
 } from '@/components/ui/chart';
 import { useNotes } from '@/hooks/use-notes';
 import { moodEmojis } from '@/lib/types';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Heart, Calendar, Palette } from 'lucide-react';
 import { differenceInDays, parseISO } from 'date-fns';
 import { FcmTokenManager } from '@/components/fcm-token-manager';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const chartConfig = {
   notes: {
@@ -53,9 +54,16 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function DashboardPage() {
-  const { notes } = useNotes();
+  const { notes, isNotesLoaded } = useNotes();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const { totalNotes, daysSinceFirstNote, mostFrequentMood, chartData } = useMemo(() => {
+    if (!isNotesLoaded) return { totalNotes: 0, daysSinceFirstNote: 0, mostFrequentMood: 'None', chartData: [] };
+
     const totalNotes = notes.length;
 
     let daysSinceFirstNote = 0;
@@ -84,7 +92,24 @@ export default function DashboardPage() {
     }));
 
     return { totalNotes, daysSinceFirstNote, mostFrequentMood, chartData };
-  }, [notes]);
+  }, [notes, isNotesLoaded]);
+
+  if (!isClient) {
+    return (
+        <div className="flex flex-col gap-8 animate-pulse">
+            <div className="text-center">
+                <Skeleton className="h-12 w-1/3 mx-auto" />
+                <Skeleton className="h-6 w-1/2 mx-auto mt-2" />
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <Skeleton className="h-32 rounded-lg" />
+                <Skeleton className="h-32 rounded-lg" />
+                <Skeleton className="h-32 rounded-lg" />
+            </div>
+            <Skeleton className="h-80 rounded-lg" />
+        </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8 animate-fade-in">

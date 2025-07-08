@@ -6,6 +6,7 @@ import React, { createContext, useState, useCallback, useEffect } from 'react';
 
 interface VowsContextType {
   vows: Vow[];
+  isVowsLoaded: boolean;
   addVow: (vow: Omit<Vow, 'id' | 'lastUpdated'>) => Vow;
   updateVow: (vow: Vow) => void;
   deleteVow: (id: string) => void;
@@ -17,23 +18,31 @@ const VOWS_STORAGE_KEY = 'lovenote-vows';
 
 export function VowsProvider({ children }: { children: React.ReactNode }) {
   const [vows, setVows] = useState<Vow[]>([]);
+  const [isVowsLoaded, setIsVowsLoaded] = useState(false);
 
   useEffect(() => {
-    const storedVows = localStorage.getItem(VOWS_STORAGE_KEY);
-    if (storedVows) {
-      setVows(JSON.parse(storedVows));
-    } else {
-        // You can add initial vows here if needed
+    try {
+        const storedVows = localStorage.getItem(VOWS_STORAGE_KEY);
+        if (storedVows) {
+          setVows(JSON.parse(storedVows));
+        } else {
+            // You can add initial vows here if needed
+            setVows([]);
+        }
+    } catch (error) {
+        console.error("Failed to load vows from localStorage", error);
         setVows([]);
+    } finally {
+        setIsVowsLoaded(true);
     }
   }, []);
 
   useEffect(() => {
     // We prevent writing to localStorage on the initial empty state
-    if (vows.length > 0 || localStorage.getItem(VOWS_STORAGE_KEY)) {
+    if (isVowsLoaded) {
         localStorage.setItem(VOWS_STORAGE_KEY, JSON.stringify(vows));
     }
-  }, [vows]);
+  }, [vows, isVowsLoaded]);
 
   const addVow = useCallback((vowData: Omit<Vow, 'id' | 'lastUpdated'>) => {
     const newVow: Vow = {
@@ -56,7 +65,7 @@ export function VowsProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <VowsContext.Provider value={{ vows, addVow, updateVow, deleteVow }}>
+    <VowsContext.Provider value={{ vows, isVowsLoaded, addVow, updateVow, deleteVow }}>
       {children}
     </VowsContext.Provider>
   );

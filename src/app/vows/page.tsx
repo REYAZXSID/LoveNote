@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useVows } from '@/hooks/use-vows';
@@ -15,7 +16,7 @@ import { Plus, Trash, Save, BookHeart } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 
 export default function VowsPage() {
-  const { vows, addVow, updateVow, deleteVow } = useVows();
+  const { vows, addVow, updateVow, deleteVow, isVowsLoaded } = useVows();
   const [selectedVowId, setSelectedVowId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -26,24 +27,21 @@ export default function VowsPage() {
     return vows.find(v => v.id === selectedVowId) || null;
   }, [selectedVowId, vows]);
 
-  // Effect to manage selection state reactively
   useEffect(() => {
+    if (!isVowsLoaded) return;
+    
     if (selectedVowId && !vows.some(v => v.id === selectedVowId)) {
-      // If the selected vow is deleted, select the first available vow or null
       setSelectedVowId(vows.length > 0 ? vows[0].id : null);
     } else if (!selectedVowId && vows.length > 0) {
-      // On initial load or when a vow is added to an empty list, select the first one
       setSelectedVowId(vows[0].id);
     }
-  }, [vows, selectedVowId]);
+  }, [vows, selectedVowId, isVowsLoaded]);
   
-  // Effect to update form fields when selection changes
   useEffect(() => {
     if (selectedVow) {
       setTitle(selectedVow.title);
       setContent(selectedVow.content);
     } else {
-      // Clear form when no vow is selected
       setTitle('');
       setContent('');
     }
@@ -84,6 +82,37 @@ export default function VowsPage() {
     toast({ title: 'Vow Deleted', description: 'The vow has been removed.', variant: 'destructive' });
   };
   
+  if (!isVowsLoaded) {
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 min-h-[calc(100vh-12rem)] animate-pulse">
+            <Card className="md:col-span-1 flex flex-col">
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <Skeleton className="h-8 w-32" />
+                    <Skeleton className="h-8 w-8" />
+                </CardHeader>
+                <CardContent className="p-4 space-y-2">
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                </CardContent>
+            </Card>
+            <Card className="md:col-span-2 flex flex-col">
+                <CardHeader>
+                    <Skeleton className="h-8 w-48" />
+                    <Skeleton className="h-4 w-64 mt-2" />
+                </CardHeader>
+                <CardContent className="flex-grow flex flex-col gap-4">
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="flex-grow w-full" />
+                    <div className="flex justify-end">
+                       <Skeleton className="h-10 w-24" />
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    )
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 min-h-[calc(100vh-12rem)] animate-fade-in">
       <Card className="md:col-span-1 flex flex-col">

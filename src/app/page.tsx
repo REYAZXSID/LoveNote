@@ -7,13 +7,51 @@ import { useNotes } from '@/hooks/use-notes';
 import { format } from 'date-fns';
 import { Heart, PlusCircle, PenSquare, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function HomePage() {
-  const { notes } = useNotes();
+  const { notes, isNotesLoaded } = useNotes();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const today = useMemo(() => format(new Date(), 'yyyy-MM-dd'), []);
-  const todaysNote = useMemo(() => notes.find(note => note.date === today), [notes, today]);
-  const latestNote = useMemo(() => notes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0], [notes]);
+
+  const todaysNote = useMemo(() => {
+    if (!isNotesLoaded) return undefined;
+    return notes.find(note => note.date === today);
+  }, [notes, today, isNotesLoaded]);
+
+  const latestNote = useMemo(() => {
+    if (!isNotesLoaded) return undefined;
+    return notes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+  }, [notes, isNotesLoaded]);
+  
+  const PageSkeleton = () => (
+    <div className="flex flex-col gap-12 md:gap-16 animate-pulse">
+        <header className="text-center py-16 md:py-24 px-4 relative">
+             <Skeleton className="h-12 md:h-16 w-1/2 mx-auto" />
+             <Skeleton className="h-5 md:h-6 w-3/4 mx-auto mt-4" />
+             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                <Skeleton className="h-12 w-48" />
+                <Skeleton className="h-12 w-48" />
+             </div>
+        </header>
+        <section className="space-y-6">
+            <Skeleton className="h-8 w-1/3 mx-auto" />
+            <div className="max-w-3xl mx-auto">
+                <Skeleton className="h-64 w-full rounded-lg" />
+            </div>
+        </section>
+    </div>
+  );
+
+  if (!isClient) {
+    return <PageSkeleton />;
+  }
 
   return (
     <div className="flex flex-col gap-12 md:gap-16 animate-fade-in">
