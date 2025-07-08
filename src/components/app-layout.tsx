@@ -20,6 +20,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { FloatingHearts } from './floating-hearts';
 import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/', label: "Today's Note", icon: <PenSquare /> },
@@ -42,13 +43,21 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <span className="font-headline text-xl font-semibold hidden sm:inline-block">LoveNote</span>
           </Link>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <TooltipProvider>
-              <nav className="flex items-center gap-1">
+              <nav className="flex items-center gap-1.5">
                 {navItems.map(item => (
                     <Tooltip key={item.href}>
                       <TooltipTrigger asChild>
-                        <Button asChild variant={pathname === item.href ? 'secondary' : 'ghost'} size="icon">
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="icon"
+                          className={cn(
+                            "border-border/60 hover:border-primary/50 hover:bg-accent",
+                            pathname === item.href ? 'border-primary/80 bg-primary/10 text-primary' : 'text-muted-foreground'
+                          )}
+                        >
                             <Link href={item.href}>
                                 {item.icon}
                                 <span className="sr-only">{item.label}</span>
