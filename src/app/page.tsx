@@ -26,8 +26,8 @@ export default function HomePage() {
   }, [notes, today, isNotesLoaded]);
 
   const latestNote = useMemo(() => {
-    if (!isNotesLoaded) return undefined;
-    return notes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+    if (!isNotesLoaded || notes.length === 0) return undefined;
+    return [...notes].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
   }, [notes, isNotesLoaded]);
   
   const PageSkeleton = () => (

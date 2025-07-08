@@ -3,7 +3,7 @@
 import { NoteCard } from '@/components/note-card';
 import { useNotes } from '@/hooks/use-notes';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 export default function GalleryPage() {
     const { notes, isNotesLoaded } = useNotes();
@@ -13,7 +13,9 @@ export default function GalleryPage() {
         setIsClient(true);
     }, []);
     
-    const sortedNotes = notes.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const sortedNotes = useMemo(() => 
+        [...notes].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+    [notes]);
 
     if (!isClient) {
         return (
