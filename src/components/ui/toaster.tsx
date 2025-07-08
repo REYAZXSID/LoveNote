@@ -23,7 +23,7 @@ export function Toaster() {
             <div className="flex items-center flex-grow">
               <div className="pr-4">
                   {variant === 'destructive' ? (
-                      <AlertTriangle className="h-6 w-6 text-destructive" />
+                      <AlertTriangle className="h-6 w-6 text-destructive-foreground" />
                   ) : (
                       <CheckCircle className="h-6 w-6 text-primary" />
                   )}

@@ -12,59 +12,55 @@ import { Vow } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { Plus, Trash, Save, BookHeart } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 export default function VowsPage() {
   const { vows, addVow, updateVow, deleteVow } = useVows();
-  const [selectedVow, setSelectedVow] = useState<Vow | null>(null);
+  const [selectedVowId, setSelectedVowId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const { toast } = useToast();
 
+  const selectedVow = useMemo(() => {
+    if (!selectedVowId) return null;
+    return vows.find(v => v.id === selectedVowId) || null;
+  }, [selectedVowId, vows]);
+
+  // Effect to manage selection state reactively
   useEffect(() => {
-    // This effect ensures the selected vow is always valid and in sync with the vows list.
-    
-    // Case 1: No vows exist. Ensure nothing is selected.
-    if (vows.length === 0) {
-      if (selectedVow !== null) setSelectedVow(null);
-      return;
+    if (selectedVowId && !vows.some(v => v.id === selectedVowId)) {
+      // If the selected vow is deleted, select the first available vow or null
+      setSelectedVowId(vows.length > 0 ? vows[0].id : null);
+    } else if (!selectedVowId && vows.length > 0) {
+      // On initial load or when a vow is added to an empty list, select the first one
+      setSelectedVowId(vows[0].id);
     }
-
-    // Case 2: A vow is selected, but it's no longer in the list (e.g., it was deleted).
-    // We select the first vow in the updated list to ensure the UI is not in an invalid state.
-    if (selectedVow && !vows.some(v => v.id === selectedVow.id)) {
-      setSelectedVow(vows[0]);
-      return;
-    }
-    
-    // Case 3: No vow is selected, but there are vows in the list.
-    // We select the first one (e.g., on initial load, or after adding the very first vow).
-    if (!selectedVow && vows.length > 0) {
-      setSelectedVow(vows[0]);
-      return;
-    }
-  }, [vows]);
-
+  }, [vows, selectedVowId]);
+  
+  // Effect to update form fields when selection changes
   useEffect(() => {
     if (selectedVow) {
       setTitle(selectedVow.title);
       setContent(selectedVow.content);
     } else {
+      // Clear form when no vow is selected
       setTitle('');
       setContent('');
     }
   }, [selectedVow]);
 
   const handleSelectVow = (vow: Vow) => {
-    setSelectedVow(vow);
+    setSelectedVowId(vow.id);
   };
 
   const handleNewVow = () => {
     const newVow = addVow({ title: 'New Vow', content: '' });
-    setSelectedVow(newVow);
+    setSelectedVowId(newVow.id);
   };
 
   const handleSave = () => {
+    if (!selectedVow) return;
+
     if (!title.trim() || !content.trim()) {
       toast({
         variant: 'destructive',
@@ -74,15 +70,13 @@ export default function VowsPage() {
       return;
     }
 
-    if (selectedVow) {
-      updateVow({
-        ...selectedVow,
-        title,
-        content,
-        lastUpdated: new Date().toISOString(),
-      });
-      toast({ title: 'Vow Updated', description: 'Your vow has been saved successfully.' });
-    }
+    updateVow({
+      ...selectedVow,
+      title,
+      content,
+      lastUpdated: new Date().toISOString(),
+    });
+    toast({ title: 'Vow Updated', description: 'Your vow has been saved successfully.' });
   };
 
   const handleDelete = (vowId: string) => {
@@ -108,7 +102,7 @@ export default function VowsPage() {
                   key={vow.id}
                   className={cn(
                     'p-3 rounded-lg cursor-pointer border-2 transition-all duration-200',
-                    selectedVow?.id === vow.id
+                    selectedVowId === vow.id
                       ? 'border-primary bg-primary/10 shadow-inner'
                       : 'border-transparent hover:bg-muted'
                   )}
