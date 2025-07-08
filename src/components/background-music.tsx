@@ -28,7 +28,7 @@ export function BackgroundMusic() {
         For example, create a file at `public/flute-music.mp3`.
         The audio player below will not work without it.
       */}
-      <audio ref={audioRef} src="/flute-music.mp3" loop preload="auto" />
+      <audio ref={audioRef} src="public/flute-music.mp3" loop preload="auto" />
       <div className="fixed bottom-4 right-4 z-50">
         <Button
           variant="secondary"
